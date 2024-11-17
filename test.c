@@ -12,14 +12,13 @@ int main()
     {
         return 1;
     }
-
-    line = get_next_line(fd);
-   // printf("buf = %s", line);
+    ///line = get_next_line(fd);
+    //printf("buf = %s", line);
     //free(line);
-    line = get_next_line(fd);
-  //  printf("buf = %s", line);
-  //  free(line);
-    line = get_next_line(fd);
+    //line = get_next_line(fd);
+    // printf("buf = %s", line);
+    // free(line);
+    line = get_next_line(0);
     printf("buf = %s", line);
     free(line);
     close(fd);

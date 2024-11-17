@@ -6,7 +6,7 @@
 /*   By: adechaji <adechaji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:53:57 by adechaji          #+#    #+#             */
-/*   Updated: 2024/11/13 18:47:13 by adechaji         ###   ########.fr       */
+/*   Updated: 2024/11/15 17:49:35 by adechaji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	int		j;
 
 	i = 0;
-	if (!s1 && !s2)
+	if (!s1 || !s2)
 		return (NULL);
 	if (!s1)
 		return (ft_strdup(s2));
