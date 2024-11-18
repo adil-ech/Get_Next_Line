@@ -5,85 +5,87 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: adechaji <adechaji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/13 14:53:28 by adechaji          #+#    #+#             */
-/*   Updated: 2024/11/15 19:33:59 by adechaji         ###   ########.fr       */
+/*   Created: 2024/11/17 16:21:53 by adechaji          #+#    #+#             */
+/*   Updated: 2024/11/18 18:00:21 by adechaji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*extractlines(int fd, char *buffer, int bread, char **rem)
+static char	*checker(const char *s, int c)
 {
-	char	*whline;
-	char	*ptr;
+	int	i;
 
-	if (bread == 0 && !ft_strchr(*rem, '\n'))
+	i = 0;
+	if (!s || !*s)
+		return (NULL);
+	while (s[i])
 	{
-		whline = ft_strdup(*rem);
-		free(*rem);
-		*rem = NULL;
-		free(buffer);
-		return (whline);
+		if (s[i] == (char)c)
+			return ((char *) &s[i]);
+		i++;
 	}
-	ptr = ft_strchr(*rem, '\n');
-	if (ptr)
-	{
-		whline = ft_substr(*rem, 0, ptr - *rem + 1);
-		*rem = ft_substr(*rem, ptr - *rem + 1,
-				ft_strlen(*rem) - (ptr - *rem + 1));
-	}
-	else
-	{
-		whline = ft_strdup(*rem);
-		*rem = NULL;
-	}
-	free(buffer);
-	return (whline);
+	if (s[i] == (char)c)
+		return ((char *) &s[i]);
+	return (NULL);
 }
 
-char	*readappend(int fd, char *buffer, char **rem)
+static char	*ft_nextline(char *s)
 {
+	int		i;
+	int		len;
+	int		j;
 	char	*tmp;
+
+	if (!s)
+		return (NULL);
+	i = 0;
+	while (s[i] && s[i] != '\n')
+		i++;
+	if (s[i] == '\0')
+		return (free(s), NULL);
+	len = ft_strlen(s) - i;
+	tmp = malloc(len + 1);
+	if (!tmp)
+		return (free(s), NULL);
+	i++;
+	j = 0;
+	while (s[i])
+		tmp[j++] = s[i++];
+	tmp[j] = '\0';
+	return (free(s), tmp);
+}
+
+static char	*readappend(int fd, char *buffer, char *rem)
+{
 	int		bread;
 
-	while (!ft_strchr(*rem, '\n'))
+	bread = 1;
+	while (bread > 0)
 	{
 		bread = read(fd, buffer, BSIZE);
-		if (bread < 0)
-		{
-			free(buffer);
-			return (NULL);
-		}
 		buffer[bread] = '\0';
-		tmp = ft_strjoin(*rem, buffer);
-		free(*rem);
-		*rem = tmp;
-		if (bread == 0)
+		rem = ft_strjoin(rem, buffer);
+		if (checker(rem, '\n'))
 			break ;
 	}
-	return (extractlines(fd, buffer, bread, rem));
+	return (rem);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*rem;
+	static char	*rem = NULL;
 	char		*buffer;
-	char		*whline;
 
-	if (BSIZE == 0)
+	if (read(fd, NULL, 0) == -1 || BSIZE <= 0)
 		return (NULL);
 	buffer = (char *)malloc(sizeof(char) * (BSIZE + 1));
 	if (!buffer)
 		return (NULL);
-	if (!rem)
-	{
-		rem = ft_strdup("");
-		if (!rem)
-		{
-			free(buffer);
-			return (NULL);
-		}
-	}
-	whline = readappend(fd, buffer, &rem);
-	return (whline);
+	rem = readappend(fd, buffer, rem);
+	free(buffer);
+	buffer = rem;
+	buffer = ft_substr(buffer);
+	rem = ft_nextline(rem);
+	return (buffer);
 }

@@ -6,7 +6,7 @@
 /*   By: adechaji <adechaji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 20:04:11 by adechaji          #+#    #+#             */
-/*   Updated: 2024/11/15 19:32:25 by adechaji         ###   ########.fr       */
+/*   Updated: 2024/11/18 17:59:28 by adechaji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,13 @@
 # include <libc.h>
 
 # ifndef BSIZE
-#  define BSIZE 10
+#  define BSIZE 100
 # endif
 
 char	*get_next_line(int fd);
-char	*ft_strchr(const char *s, int c);
-char	*ft_strdup(const char *s1);
-size_t	ft_strlen(const char *s);
-char	*ft_substr(const char *s, unsigned int start, size_t len);
-char	*ft_strjoin(char const *s1, char const *s2);
+int		ft_strlen(char *s);
+char	*ft_strjoin(char *s1, char *s2);
+char	*ft_substr(char *s);
+char	*ft_strdup(char *s1);
 
 #endif

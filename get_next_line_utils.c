@@ -6,15 +6,15 @@
 /*   By: adechaji <adechaji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 14:53:57 by adechaji          #+#    #+#             */
-/*   Updated: 2024/11/15 17:49:35 by adechaji         ###   ########.fr       */
+/*   Updated: 2024/11/18 17:59:59 by adechaji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t	ft_strlen(const char *s)
+int	ft_strlen(char *s)
 {
-	size_t	i;
+	int	i;
 
 	i = 0;
 	while (s[i])
@@ -24,23 +24,7 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-char	*ft_strchr(const char *s, int c)
-{
-	int	i;
-
-	i = 0;
-	while (s[i])
-	{
-		if (s[i] == (char)c)
-			return ((char *) &s[i]);
-		i++;
-	}
-	if (s[i] == (char)c)
-		return ((char *) &s[i]);
-	return (NULL);
-}
-
-char	*ft_strdup(const char *s1)
+char	*ft_strdup(char *s1)
 {
 	char	*str;
 	int		slen;
@@ -60,63 +44,73 @@ char	*ft_strdup(const char *s1)
 	return (str);
 }
 
-char	*ft_substr(const char *s, unsigned int start, size_t len)
+char	*ft_strjoin(char *s1, char *s2)
 {
-	size_t	i;
-	size_t	slen;
+	int		i;
+	int		j;
+	int		len;
 	char	*str;
 
-	i = 0;
-	if (!s)
+	if (!s1 && !s2)
 		return (NULL);
-	slen = ft_strlen(s);
-	if (start >= slen)
-		return (ft_strdup(""));
-	if (len > slen - start)
-		len = slen - start;
+	else if (!s1 && s2)
+		return (ft_strdup(s2));
+	else if (!s2 && s1)
+		return (s1);
+	len = ft_strlen(s1) + ft_strlen(s2);
 	str = malloc(len + 1);
 	if (!str)
-		return (NULL);
-	while (i < len)
+		return (free(s1), NULL);
+	i = -1;
+	while (s1[++i])
+		str[i] = s1[i];
+	j = 0;
+	while (s2[j])
+		str[i++] = s2[j++];
+	str[i] = '\0';
+	return (free(s1), str);
+}
+
+char	*ft_subfornorm(char *s, char *str, int line, int i)
+{
+	int	j;
+
+	j = 0;
+	while (j < i)
 	{
-		str[i] = s[start + i];
+		str[j] = s[j];
+		j++;
+	}
+	if (line)
+	{
+		str[i] = '\n';
 		i++;
 	}
 	str[i] = '\0';
 	return (str);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_substr(char *s)
 {
 	char	*str;
-	int		lens1;
-	int		lens2;
 	int		i;
+	int		new_line;
 	int		j;
 
-	i = 0;
-	if (!s1 || !s2)
+	if (!s || !*s)
 		return (NULL);
-	if (!s1)
-		return (ft_strdup(s2));
-	if (!s2)
-		return (ft_strdup(s1));
-	lens1 = ft_strlen(s1);
-	lens2 = ft_strlen(s2);
-	str = malloc(sizeof(char) * (lens1 + lens2 + 1));
+	i = 0;
+	j = 1;
+	new_line = 0;
+	while (s[i] && s[i] != '\n')
+		i++;
+	if (s[i] == '\n')
+	{
+		new_line = 1;
+		j = 2;
+	}
+	str = malloc(i + j);
 	if (!str)
 		return (NULL);
-	while (i < lens1)
-	{
-		str[i] = s1[i];
-		i++;
-	}
-	j = 0;
-	while (j < lens2)
-	{
-		str[i + j] = s2[j];
-		j++;
-	}
-	str[i + j] = '\0';
-	return (str);
+	return (ft_subfornorm(s, str, new_line, i));
 }
