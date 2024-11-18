@@ -6,7 +6,7 @@
 /*   By: adechaji <adechaji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 20:04:11 by adechaji          #+#    #+#             */
-/*   Updated: 2024/11/18 17:59:28 by adechaji         ###   ########.fr       */
+/*   Updated: 2024/11/18 23:20:47 by adechaji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 
 # include <libc.h>
 
-# ifndef BSIZE
-#  define BSIZE 100
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 10
 # endif
 
 char	*get_next_line(int fd);

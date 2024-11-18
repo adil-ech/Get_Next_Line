@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: adechaji <adechaji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/17 16:21:53 by adechaji          #+#    #+#             */
-/*   Updated: 2024/11/18 18:00:21 by adechaji         ###   ########.fr       */
+/*   Created: 2024/11/19 00:39:25 by adechaji          #+#    #+#             */
+/*   Updated: 2024/11/19 00:43:04 by adechaji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@ static char	*checker(const char *s, int c)
 	while (s[i])
 	{
 		if (s[i] == (char)c)
-			return ((char *) &s[i]);
+			return ((char *)&s[i]);
 		i++;
 	}
 	if (s[i] == (char)c)
-		return ((char *) &s[i]);
+		return ((char *)&s[i]);
 	return (NULL);
 }
 
@@ -34,7 +34,6 @@ static char	*ft_nextline(char *s)
 {
 	int		i;
 	int		len;
-	int		j;
 	char	*tmp;
 
 	if (!s)
@@ -49,21 +48,35 @@ static char	*ft_nextline(char *s)
 	if (!tmp)
 		return (free(s), NULL);
 	i++;
-	j = 0;
+	len = 0;
 	while (s[i])
-		tmp[j++] = s[i++];
-	tmp[j] = '\0';
+		tmp[len++] = s[i++];
+	tmp[len] = '\0';
 	return (free(s), tmp);
+}
+
+void	remfree(char **rem)
+{
+	if (rem && *rem)
+	{
+		free(*rem);
+		*rem = NULL;
+	}
 }
 
 static char	*readappend(int fd, char *buffer, char *rem)
 {
-	int		bread;
+	int	bread;
 
 	bread = 1;
 	while (bread > 0)
 	{
-		bread = read(fd, buffer, BSIZE);
+		bread = read(fd, buffer, BUFFER_SIZE);
+		if (bread == -1)
+		{
+			remfree(&rem);
+			break ;
+		}
 		buffer[bread] = '\0';
 		rem = ft_strjoin(rem, buffer);
 		if (checker(rem, '\n'))
@@ -76,16 +89,18 @@ char	*get_next_line(int fd)
 {
 	static char	*rem = NULL;
 	char		*buffer;
+	char		*line;
 
-	if (read(fd, NULL, 0) == -1 || BSIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	buffer = (char *)malloc(sizeof(char) * (BSIZE + 1));
+	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buffer)
 		return (NULL);
 	rem = readappend(fd, buffer, rem);
 	free(buffer);
-	buffer = rem;
-	buffer = ft_substr(buffer);
+	if (!rem)
+		return (NULL);
+	line = ft_substr(rem);
 	rem = ft_nextline(rem);
-	return (buffer);
+	return (line);
 }
