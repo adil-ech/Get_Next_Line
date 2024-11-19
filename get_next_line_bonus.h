@@ -6,7 +6,7 @@
 /*   By: adechaji <adechaji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 01:54:35 by adechaji          #+#    #+#             */
-/*   Updated: 2024/11/19 02:12:32 by adechaji         ###   ########.fr       */
+/*   Updated: 2024/11/19 15:20:37 by adechaji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define GET_NEXT_LINE_BONUS_H
 
 # include <libc.h>
+# include <sys/select.h>
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 10

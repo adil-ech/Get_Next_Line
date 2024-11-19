@@ -6,31 +6,28 @@
 /*   By: adechaji <adechaji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 01:53:00 by adechaji          #+#    #+#             */
-/*   Updated: 2024/11/19 02:12:01 by adechaji         ###   ########.fr       */
+/*   Updated: 2024/11/19 15:23:26 by adechaji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-static	t_list	*listforbonus(t_list **list, int fd)
+static char	*checker(const char *s, int c)
 {
-	t_list	*node;
+	int	i;
 
-	node = *list;
-	while (node)
-	{
-		if (node->fd == fd)
-			return (node);
-		node = node->next;
-	}
-	node = malloc(sizeof(t_list));
-	if (!node)
+	i = 0;
+	if (!s || !*s)
 		return (NULL);
-	node->fd = fd;
-	node->rem = NULL;
-	node->next = *list;
-	*list = node;
-	return (node);
+	while (s[i])
+	{
+		if (s[i] == (char)c)
+			return ((char *)&s[i]);
+		i++;
+	}
+	if (s[i] == (char)c)
+		return ((char *)&s[i]);
+	return (NULL);
 }
 
 static char	*ft_nextline(char *s)
@@ -71,7 +68,6 @@ static void	remfree(char **rem)
 static char	*readappend(int fd, char *buffer, char *rem)
 {
 	int	bread;
-	int	i;
 
 	bread = 1;
 	while (bread > 0)
@@ -84,37 +80,28 @@ static char	*readappend(int fd, char *buffer, char *rem)
 		}
 		buffer[bread] = '\0';
 		rem = ft_strjoin(rem, buffer);
-		i = 0;
-		while (rem && rem[i])
-		{
-			if (rem[i] == '\n')
-				return (rem);
-			i++;
-		}
+		if (checker(rem, '\n'))
+			break ;
 	}
 	return (rem);
 }
 
 char	*get_next_line(int fd)
 {
-	static t_list	*head = NULL;
-	t_list			*node;
-	char			*buffer;
-	char			*line;
+	static char	*rem[FD_SETSIZE];
+	char		*buffer;
+	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (NULL);
-	node = listforbonus(&head, fd);
-	if (!node)
 		return (NULL);
 	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buffer)
 		return (NULL);
-	node->rem = readappend(fd, buffer, node->rem);
+	rem[fd] = readappend(fd, buffer, rem[fd]);
 	free(buffer);
-	if (!node->rem || !*node->rem)
-		return (remfree(&node->rem), NULL);
-	line = ft_substr(node->rem);
-	node->rem = ft_nextline(node->rem);
+	if (!rem[fd] || !*rem[fd])
+		return (remfree(&rem[fd]), NULL);
+	line = ft_substr(rem[fd]);
+	rem[fd] = ft_nextline(rem[fd]);
 	return (line);
 }
