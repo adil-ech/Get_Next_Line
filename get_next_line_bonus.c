@@ -1,33 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adechaji <adechaji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/19 00:39:25 by adechaji          #+#    #+#             */
-/*   Updated: 2024/11/19 01:35:37 by adechaji         ###   ########.fr       */
+/*   Created: 2024/11/19 01:53:00 by adechaji          #+#    #+#             */
+/*   Updated: 2024/11/19 02:12:01 by adechaji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
-static char	*checker(const char *s, int c)
+static	t_list	*listforbonus(t_list **list, int fd)
 {
-	int	i;
+	t_list	*node;
 
-	i = 0;
-	if (!s || !*s)
-		return (NULL);
-	while (s[i])
+	node = *list;
+	while (node)
 	{
-		if (s[i] == (char)c)
-			return ((char *)&s[i]);
-		i++;
+		if (node->fd == fd)
+			return (node);
+		node = node->next;
 	}
-	if (s[i] == (char)c)
-		return ((char *)&s[i]);
-	return (NULL);
+	node = malloc(sizeof(t_list));
+	if (!node)
+		return (NULL);
+	node->fd = fd;
+	node->rem = NULL;
+	node->next = *list;
+	*list = node;
+	return (node);
 }
 
 static char	*ft_nextline(char *s)
@@ -68,6 +71,7 @@ static void	remfree(char **rem)
 static char	*readappend(int fd, char *buffer, char *rem)
 {
 	int	bread;
+	int	i;
 
 	bread = 1;
 	while (bread > 0)
@@ -80,28 +84,37 @@ static char	*readappend(int fd, char *buffer, char *rem)
 		}
 		buffer[bread] = '\0';
 		rem = ft_strjoin(rem, buffer);
-		if (checker(rem, '\n'))
-			break ;
+		i = 0;
+		while (rem && rem[i])
+		{
+			if (rem[i] == '\n')
+				return (rem);
+			i++;
+		}
 	}
 	return (rem);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*rem = NULL;
-	char		*buffer;
-	char		*line;
+	static t_list	*head = NULL;
+	t_list			*node;
+	char			*buffer;
+	char			*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	node = listforbonus(&head, fd);
+	if (!node)
 		return (NULL);
 	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buffer)
 		return (NULL);
-	rem = readappend(fd, buffer, rem);
+	node->rem = readappend(fd, buffer, node->rem);
 	free(buffer);
-	if (!rem || !*rem)
-		return (remfree(&rem), NULL);
-	line = ft_substr(rem);
-	rem = ft_nextline(rem);
+	if (!node->rem || !*node->rem)
+		return (remfree(&node->rem), NULL);
+	line = ft_substr(node->rem);
+	node->rem = ft_nextline(node->rem);
 	return (line);
 }
