@@ -6,7 +6,7 @@
 /*   By: adechaji <adechaji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 01:53:00 by adechaji          #+#    #+#             */
-/*   Updated: 2024/11/19 15:23:26 by adechaji         ###   ########.fr       */
+/*   Updated: 2024/12/07 20:02:53 by adechaji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,13 +88,14 @@ static char	*readappend(int fd, char *buffer, char *rem)
 
 char	*get_next_line(int fd)
 {
-	static char	*rem[FD_SETSIZE];
+	static char	*rem[OPEN_MAX];
 	char		*buffer;
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE >= 2147483647
+		|| fd > OPEN_MAX)
 		return (NULL);
-	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	buffer = (char *)malloc(sizeof(char) * ((size_t)BUFFER_SIZE + 1));
 	if (!buffer)
 		return (NULL);
 	rem[fd] = readappend(fd, buffer, rem[fd]);

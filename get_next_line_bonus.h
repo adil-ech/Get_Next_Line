@@ -6,14 +6,16 @@
 /*   By: adechaji <adechaji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 01:54:35 by adechaji          #+#    #+#             */
-/*   Updated: 2024/11/19 15:20:37 by adechaji         ###   ########.fr       */
+/*   Updated: 2024/12/07 19:59:49 by adechaji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_BONUS_H
 # define GET_NEXT_LINE_BONUS_H
 
-# include <libc.h>
+# include <unistd.h>
+# include <stdlib.h>
+# include <limits.h>
 # include <sys/select.h>
 
 # ifndef BUFFER_SIZE
