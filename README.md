@@ -1,4 +1,5 @@
-![Get_next_line Banner](https://raw.githubusercontent.com/oakoudad/badge42/main/subjects/get_next_line.png)
+![image](https://github.com/user-attachments/assets/d40dd876-c7e1-4060-bf24-97bee762bdfd)
+
 
 # 📖 Get_next_line
 
