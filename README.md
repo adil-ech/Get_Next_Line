@@ -73,8 +73,13 @@ get_next_line/
 - Return a line read from the file descriptor including the newline  
 - Handle end of file and errors gracefully  
 
-### ❌ Bonus Part — Not Included
-- Handle multiple file descriptors simultaneously  
+### 🎉 Bonus Part — Multiple File Descriptors Support
+
+- Handle multiple file descriptors simultaneously, ensuring that each descriptor’s buffer and leftover data are managed independently.
+- Maintain static variables or structures to keep track of leftover data for each open file descriptor.
+- Ensure no interference occurs between file descriptors when reading lines.
+- Properly free memory when a file descriptor is closed or no longer needed.
+- Maintain robust error handling and edge case management across multiple streams. 
 
 ## 📬 License
 
@@ -83,4 +88,4 @@ This project is part of the 42 Network curriculum and is for educational use onl
 ## 📄 Subject PDF
 
 You can read the official 42 Get_next_line subject here:  
-👉 [Get_next_line Subject PDF](https://github.com/oakoudad/badge42/blob/main/subjects/get_next_line.en.pdf)
+👉 [Get_next_line Subject PDF](./en.subject.pdf)
